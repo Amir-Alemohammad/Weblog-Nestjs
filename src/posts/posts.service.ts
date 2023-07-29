@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable , HttpStatus } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import {Repository} from 'typeorm'
@@ -14,8 +14,11 @@ export class PostsService {
     private postRepository: Repository<Post>
   ){}
   async create(createPostDto: CreatePostDto , request:any) {
+    if(!request.body.image) throw new HttpException("Image is Required",HttpStatus.BAD_REQUEST)
     const post = this.postRepository.create(createPostDto)
+    
     post.user = request.user.id;
+    
     post.image = request.body.image;
     await this.postRepository.save(post)
     return {

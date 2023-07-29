@@ -3,7 +3,7 @@ import multer , {diskStorage} from "multer"
 import * as fs from "fs"
 import * as path from "path"
 import { v4 as uuidv4 } from 'uuid';
-import { HttpException } from '@nestjs/common';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
 function createRoute (req) {
     let d = new Date();
@@ -43,7 +43,7 @@ const storage = diskStorage({
 const fileFilter = function(req , file , cb){
     const mimetypes = ["image/jpg","image/gif","image/jpeg","image/png","image/webp"]
     if(!mimetypes.includes(file.mimetype)){
-        return cb(new HttpException("The file format is not correct",400))
+        return cb(new HttpException("The file format is not correct",HttpStatus.BAD_REQUEST))
     }else{
         return cb(null,true)
     }

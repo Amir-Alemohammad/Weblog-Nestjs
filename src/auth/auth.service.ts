@@ -1,4 +1,4 @@
-import { Injectable , HttpException } from '@nestjs/common';
+import { Injectable , HttpException, HttpStatus } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { registerDto } from './dto/register.dto';
 import * as bcrypt from "bcryptjs"
@@ -19,7 +19,7 @@ export class AuthService {
     async registerUser(registerDto:registerDto){
          const user = await this.userService.findUserByEmail(registerDto.email);
          if(user){
-            throw new HttpException("User Already Exists!",401);
+            throw new HttpException("User Already Exists!",HttpStatus.BAD_REQUEST);
          }
          else{
             registerDto.password = await bcrypt.hash(registerDto.password , 10);
@@ -32,7 +32,7 @@ export class AuthService {
 
         const user = await this.userService.findUserByEmail(getOtpDto.email);
         
-        if(!user) throw new HttpException("There is no user with this email",404);
+        if(!user) throw new HttpException("There is no user with this email",HttpStatus.NOT_FOUND);
 
         const updateResult = await this.userService.updateUser(user.email,code)
         const maileOption = {
@@ -51,9 +51,9 @@ export class AuthService {
     async login(loginDto:LoginDto){
         const user = await this.userService.findUserByEmail(loginDto.email);
 
-        if(!user) throw new HttpException("There is no user with this email",404);
+        if(!user) throw new HttpException("There is no user with this email",HttpStatus.NOT_FOUND);
 
-        if(user.code !== loginDto.code) throw new HttpException("The entered code is not correct",400);
+        if(user.code !== loginDto.code) throw new HttpException("The entered code is not correct",HttpStatus.BAD_REQUEST);
         
         const token = this.jwtService.sign({
             email: user.email,
