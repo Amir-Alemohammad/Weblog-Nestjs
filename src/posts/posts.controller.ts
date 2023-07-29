@@ -25,8 +25,8 @@ export class PostsController {
 
   @Get(':id')
   @UseGuards(jwtAuthGuard)
-  findOne(@Param('id') id: string) {
-    return this.postsService.findOne(+id);
+  findOne(@Param('id') id: string , @Request() request) {
+    return this.postsService.findOne(+id,request);
   }
 
   @Patch(':id')

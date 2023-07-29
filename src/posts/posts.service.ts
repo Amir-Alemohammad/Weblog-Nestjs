@@ -43,15 +43,26 @@ export class PostsService {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} post`;
+  async findOne(id: number,request:any) {
+    const user = request.user.id;
+    const post = await this.postRepository.findOne({
+      where:{
+        id,
+        user,
+      }
+    });
+    if(!post) throw new HttpException("There is no Post",HttpStatus.NOT_FOUND)
+    return {
+      statusCode: 200,
+      post,
+    }
   }
 
-  update(id: number, updatePostDto: UpdatePostDto) {
+  async update(id: number, updatePostDto: UpdatePostDto) {
     return `This action updates a #${id} post`;
   }
 
-  remove(id: number) {
+  async remove(id: number) {
     return `This action removes a #${id} post`;
   }
 }
