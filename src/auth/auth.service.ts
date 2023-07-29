@@ -7,6 +7,7 @@ import { JwtService } from '@nestjs/jwt';
 import { getOtpDto } from './dto/getOtp.dto';
 import { MailerService } from '@nestjs-modules/mailer';
 
+
 @Injectable()
 export class AuthService {
     constructor(
@@ -46,8 +47,25 @@ export class AuthService {
             message: "The validation code has been sent to your email",
         }   
     }
+    
     async login(loginDto:LoginDto){
+        const user = await this.userService.findUserByEmail(loginDto.email);
+
+        if(!user) throw new HttpException("There is no user with this email",404);
+
+        if(user.code !== loginDto.code) throw new HttpException("The entered code is not correct",400);
         
+        const token = this.jwtService.sign({
+            email: user.email,
+            id: user.id,
+        },{
+            expiresIn: "24h",
+            secret: process.env.JWT_SECRET
+        });
+        return{
+            statusCode: 200,
+            accessToken : token,
+        }
     }
 
 
