@@ -18,21 +18,25 @@ export class PostsController {
   }
 
   @Get()
-  findAll() {
-    return this.postsService.findAll();
+  @UseGuards(jwtAuthGuard)
+  findAll(@Request() request) {
+    return this.postsService.findAll(request);
   }
 
   @Get(':id')
+  @UseGuards(jwtAuthGuard)
   findOne(@Param('id') id: string) {
     return this.postsService.findOne(+id);
   }
 
   @Patch(':id')
+  @UseGuards(jwtAuthGuard)
   update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
     return this.postsService.update(+id, updatePostDto);
   }
 
   @Delete(':id')
+  @UseGuards(jwtAuthGuard)
   remove(@Param('id') id: string) {
     return this.postsService.remove(+id);
   }
