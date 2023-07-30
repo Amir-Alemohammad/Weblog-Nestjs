@@ -1,5 +1,7 @@
 import { MailerService } from "@nestjs-modules/mailer"
 import { Injectable } from "@nestjs/common"
+import * as path from "path";
+import * as fs from 'fs'
 
 @Injectable()
 export class functions{
@@ -14,5 +16,9 @@ export class functions{
             text: String(code),
         }
         this.maileService.sendMail(maileOption)
+    }
+    deleteFileInPublic(fileAddress){
+        const filePath = path.join(__dirname , ".." , ".." , "public" , fileAddress);
+        fs.unlinkSync(filePath)
     }
 }

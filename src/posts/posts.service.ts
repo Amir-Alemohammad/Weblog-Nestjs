@@ -4,14 +4,15 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import {Repository} from 'typeorm'
 import { Post } from './entities/post.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-
+import { functions } from 'src/utils/functions';
 
 
 @Injectable()
 export class PostsService {
   constructor(
     @InjectRepository(Post)
-    private postRepository: Repository<Post>
+    private postRepository: Repository<Post>,
+    private functions : functions
   ){}
   
   async create(createPostDto: CreatePostDto , request:any) {
@@ -114,7 +115,20 @@ export class PostsService {
     }
   }
 
-  async remove(id: number) {
-    return `This action removes a #${id} post`;
+  async remove(id: number , request) {
+    const author = request.user.id;
+    const post = await this.postRepository.findOne({
+      where:{
+        id,
+        author,
+      }
+    });
+    if(!post) throw new HttpException("Post Not Found",HttpStatus.NOT_FOUND)
+    this.functions.deleteFileInPublic(post.image);
+    await this.postRepository.remove(post);
+    return {
+      statusCode: HttpStatus.OK,
+      message: "Your post has been successfully Deleted"
+    }
   }
 }

@@ -43,7 +43,7 @@ export class PostsController {
 
   @Delete(':id')
   @UseGuards(jwtAuthGuard)
-  remove(@Param('id') id: string) {
-    return this.postsService.remove(+id);
+  remove(@Param('id') id: string , @Request() request) {
+    return this.postsService.remove(+id,request);
   }
 }
