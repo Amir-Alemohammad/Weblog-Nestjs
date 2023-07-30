@@ -1,54 +1,44 @@
 import { Injectable , HttpException, HttpStatus } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
-import { registerDto } from './dto/register.dto';
-import * as bcrypt from "bcryptjs"
 import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { getOtpDto } from './dto/getOtp.dto';
-import { MailerService } from '@nestjs-modules/mailer';
-
+import { functions } from 'src/utils/functions';
 
 @Injectable()
 export class AuthService {
     constructor(
         private readonly userService: UsersService,
         private readonly jwtService: JwtService,
-        private readonly maileService : MailerService,
+        private readonly functions : functions,
         ){}
     
-    async registerUser(registerDto:registerDto){
-         const user = await this.userService.findUserByEmail(registerDto.email);
-         if(user){
-            throw new HttpException("User Already Exists!",HttpStatus.BAD_REQUEST);
-         }
-         else{
-            registerDto.password = await bcrypt.hash(registerDto.password , 10);
-            return await this.userService.createUser(registerDto);
-         }   
-    }
 
     async getOtp(getOtpDto:getOtpDto){
+
         const code = Math.floor(Math.random() * 90000 + 10000);
 
         const user = await this.userService.findUserByEmail(getOtpDto.email);
-        
-        if(!user) throw new HttpException("There is no user with this email",HttpStatus.NOT_FOUND);
 
-        const updateResult = await this.userService.updateUser(user.email,code)
-        const maileOption = {
-            from: "amirho3inalemohammad@gmail.com",
-            to: user.email,
-            subject: "Validation Code",
-            text: String(code),
+        if(!user){
+            const createUser = await this.userService.createUser(getOtpDto);
+            
+            await this.userService.updateUserOtpCode(createUser.email,code)
+            this.functions.SendEmail(createUser.email,code)
+            
+            
+        }else{
+            const updateResult = await this.userService.updateUserOtpCode(user.email,code)
+            this.functions.SendEmail(user.email,code)
+            
         }
-        this.maileService.sendMail(maileOption)
         return {
             statusCode: 200,
             message: "The validation code has been sent to your email",
         }   
     }
     
-    async login(loginDto:LoginDto){
+    async login(loginDto:LoginDto , response){
         const user = await this.userService.findUserByEmail(loginDto.email);
 
         if(!user) throw new HttpException("There is no user with this email",HttpStatus.NOT_FOUND);
@@ -62,9 +52,20 @@ export class AuthService {
             expiresIn: "24h",
             secret: process.env.JWT_SECRET
         });
+        this.userService.updateUserToken(user.email,token);
+
+        response.cookie("access_token",token)
+
         return{
             statusCode: 200,
             accessToken : token,
+        }
+    }
+    async logout(response){
+        response.clearCookie("access_token");
+        return {
+            satatusCode:200,
+            message: "You have successfully logged out"
         }
     }
 

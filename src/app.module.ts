@@ -8,6 +8,7 @@ import {TypeOrmModule} from '@nestjs/typeorm'
 import { AuthModule } from './auth/auth.module';
 import { MailerModule } from '@nestjs-modules/mailer/dist';
 import { PostsModule } from './posts/posts.module';
+import { functions } from './utils/functions';
 
 @Module({
   imports: [
@@ -36,7 +37,7 @@ import { PostsModule } from './posts/posts.module';
     PostsModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService , functions],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer){
