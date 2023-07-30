@@ -28,11 +28,17 @@ export class PostsController {
   findOne(@Param('id') id: string , @Request() request) {
     return this.postsService.findOne(+id,request);
   }
+  @Get('slugs/:slug')
+  @UseGuards(jwtAuthGuard)
+  findBySlug(@Param('slug') slug: string) {
+    return this.postsService.findBySlug(slug);
+  }
 
   @Patch(':id')
   @UseGuards(jwtAuthGuard)
-  update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
-    return this.postsService.update(+id, updatePostDto);
+  @UseInterceptors(uploadFile)
+  update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto, @Request() request) {
+    return this.postsService.update(+id, updatePostDto , request);
   }
 
   @Delete(':id')

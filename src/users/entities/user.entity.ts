@@ -1,4 +1,6 @@
-import {Entity , Column , PrimaryGeneratedColumn} from 'typeorm'
+import { Post } from 'src/posts/entities/post.entity';
+import { PostLikes } from 'src/posts/entities/postLike.entity';
+import {Entity , Column , PrimaryGeneratedColumn, OneToMany, JoinColumn, ManyToOne} from 'typeorm'
 
 
 @Entity("User")
@@ -14,4 +16,10 @@ export class User {
 
     @Column({default: 0})
     code: number;
+
+    @Column("int",{array : true , default : []})
+    @OneToMany(() => PostLikes, blog => blog.user)
+    @JoinColumn({name:'blog_likes'})
+    blog_likes: PostLikes[]
+
 }

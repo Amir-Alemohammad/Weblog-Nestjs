@@ -33,7 +33,7 @@ export class AuthService {
             
         }
         return {
-            statusCode: 200,
+            statusCode: HttpStatus.OK,
             message: "The validation code has been sent to your email",
         }   
     }
@@ -57,14 +57,14 @@ export class AuthService {
         response.cookie("access_token",token)
 
         return{
-            statusCode: 200,
+            statusCode: HttpStatus.OK,
             accessToken : token,
         }
     }
     async logout(response){
         response.clearCookie("access_token");
         return {
-            satatusCode:200,
+            satatusCode:HttpStatus.OK,
             message: "You have successfully logged out"
         }
     }
