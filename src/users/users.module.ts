@@ -7,7 +7,7 @@ import { PostLikes } from 'src/posts/entities/postLike.entity';
 import { Post } from 'src/posts/entities/post.entity';
 
 @Module({
-  imports:[TypeOrmModule.forFeature([User,Post , PostLikes])],
+  imports:[TypeOrmModule.forFeature([User , Post , PostLikes])],
   providers: [UsersService , functions]
 })
 export class UsersModule {}

@@ -33,6 +33,11 @@ export class PostsController {
   findBySlug(@Param('slug') slug: string) {
     return this.postsService.findBySlug(slug);
   }
+  @Get('like/:id')
+  @UseGuards(jwtAuthGuard)
+  likePost(@Param('id') id: number , @Request() request) {
+    return this.postsService.likePost(id , request);
+  }
 
   @Patch(':id')
   @UseGuards(jwtAuthGuard)
@@ -46,4 +51,6 @@ export class PostsController {
   remove(@Param('id') id: string , @Request() request) {
     return this.postsService.remove(+id,request);
   }
+
+
 }

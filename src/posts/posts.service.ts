@@ -5,6 +5,9 @@ import {Repository} from 'typeorm'
 import { Post } from './entities/post.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { functions } from 'src/utils/functions';
+import { UsersService } from 'src/users/users.service';
+import { PostLikes } from './entities/postLike.entity';
+import { title } from 'process';
 
 
 @Injectable()
@@ -12,7 +15,10 @@ export class PostsService {
   constructor(
     @InjectRepository(Post)
     private postRepository: Repository<Post>,
-    private functions : functions
+    @InjectRepository(PostLikes)
+    private postLikeRepositroy: Repository<PostLikes>,
+    private functions : functions,
+    private readonly userService: UsersService,
   ){}
   
   async create(createPostDto: CreatePostDto , request:any) {
@@ -27,6 +33,7 @@ export class PostsService {
 
     post.author = request.user.id;
     
+
     post.image = request.body.image;
 
     post.image = post.image.replace(/\\/g,"/")
@@ -84,6 +91,31 @@ export class PostsService {
       post
     }
   }
+
+  async likePost(id:number , request){
+    const userId = request.user.id;
+
+    const user = await this.userService.findUserById(userId);
+
+    const post = await this.postRepository.findOne({
+      where:{
+        id,
+      }
+    });
+
+    const obj = {
+      blog:post,
+      blogId: post.id,
+      user:user,
+      id,
+      userId
+    }
+
+  
+    
+    return post.likes
+  }
+
 
   async update(id: number, updatePostDto: UpdatePostDto , request) {
     const author = request.user.id;

@@ -1,6 +1,4 @@
 import { Module , MiddlewareConsumer , NestModule } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { LoggerMiddleware } from './logger/logger.middleware';
 import { ConfigModule } from '@nestjs/config';
@@ -36,8 +34,9 @@ import { functions } from './utils/functions';
     AuthModule,
     PostsModule,
   ],
-  controllers: [AppController],
-  providers: [AppService , functions],
+  controllers: [],
+  providers: [functions],
+
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer){

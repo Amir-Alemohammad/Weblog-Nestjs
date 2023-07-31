@@ -35,5 +35,13 @@ export class UsersService {
     user.accessToken = token;
     return await this.userRepository.save(user);
   }
-  
+  async findUserById(id:number){
+    const user = await this.userRepository.findOne({
+      where:{
+        id
+      },
+      select: ["email","id","blog_likes"]
+    });
+    return user
+  }
 }

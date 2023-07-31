@@ -1,3 +1,4 @@
+import { Comment } from 'src/posts/entities/comment.entity';
 import { Post } from 'src/posts/entities/post.entity';
 import { PostLikes } from 'src/posts/entities/postLike.entity';
 import {Entity , Column , PrimaryGeneratedColumn, OneToMany, JoinColumn, ManyToOne} from 'typeorm'
@@ -17,9 +18,17 @@ export class User {
     @Column({default: 0})
     code: number;
 
-    @Column("int",{array : true , default : []})
+    @Column("int",{array:true , default:[]})
     @OneToMany(() => PostLikes, blog => blog.user)
-    @JoinColumn({name:'blog_likes'})
     blog_likes: PostLikes[]
+
+    @Column("int",{array:true,default: []})
+    @OneToMany( () => Comment , (comment) => comment.user)
+    blog_comments: Comment[]
+
+
+    @Column("int",{default: [] , array:true})
+    @OneToMany(() => Post , (post) => post.bookmarks)
+    blog_bookMarks: Post[]
 
 }

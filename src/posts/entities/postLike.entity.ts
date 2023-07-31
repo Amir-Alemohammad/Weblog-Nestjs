@@ -4,14 +4,16 @@ import { Post } from "./post.entity";
 
 @Entity("PostLikes")
 export class PostLikes{
-    @PrimaryGeneratedColumn("uuid")
-    id: string;
+    
+    @PrimaryGeneratedColumn()
+    id: number;
+
     @Column()
-    blogId: string;
+    blogId: number;
 
     @Column("int",{array:true})
     @ManyToOne(() => Post, blog => blog.likes)
-    blog: Post
+    blog: Post;
     
     @Column()
     userId: string;

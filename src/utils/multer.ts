@@ -28,7 +28,7 @@ const storage = diskStorage({
     },
     filename: (req,file,cb)=>{
         if(file.originalname){
-            const fileName = `${uuidv4()}_${file.originalname}`;
+            const fileName = `${uuidv4()}_${file.originalname.replace(/ /g,"")}`;
             
             req.body.filename = fileName;
 
