@@ -44,6 +44,33 @@ export class CommentService {
 
   async confirmComment(id:number,request){
     
+    const user = request.user;
+
+    if(user.Role !== "ADMIN") throw new HttpException("You do not have permission to access" , HttpStatus.FORBIDDEN)
+
+    const comment = await this.commentRepository.findOne({
+      where:{
+        id,
+      }
+    });
+    
+    if(!comment) throw new HttpException("Comment Not Found",HttpStatus.NOT_FOUND)
+    
+    if(comment.openToComment && comment.show) throw new HttpException("Comment has open for blog",HttpStatus.BAD_REQUEST)
+
+    comment.openToComment = true;
+    comment.show = true;
+    
+    const result = await this.commentRepository.save(comment).then(commnet =>{
+      return comment
+    }).catch(err =>{
+      throw new HttpException("Internal Server Error",HttpStatus.INTERNAL_SERVER_ERROR)
+    });
+    return {
+      statusCode: HttpStatus.OK,
+      message: "Comments are open for the blog!"
+    }
+
   }
 
 }
