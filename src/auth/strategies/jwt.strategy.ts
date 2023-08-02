@@ -1,4 +1,4 @@
-//----------------------this strategy for cookie parser----------------------//
+//----------------------this strategy for authentication with cookies----------------------//
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Request } from 'express';
@@ -29,11 +29,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     return {
         id: payload.id,
         email: payload.email,
+        Role:payload.Role
     };
   }
 }
 
-// --------------Important : this strategy for header token----------------//
+// --------------Important : this strategy for authentication with header----------------//
 // import {Injectable} from "@nestjs/common"
 // import {PassportStrategy} from "@nestjs/passport";
 // import {Strategy , ExtractJwt} from "passport-jwt"
