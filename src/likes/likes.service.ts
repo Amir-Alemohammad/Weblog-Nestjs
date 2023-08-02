@@ -2,7 +2,6 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Likes } from "./entities/Like.entity";
-import { Post } from "src/posts/entities/post.entity";
 import { PostsService } from "src/posts/posts.service";
 
 @Injectable()
@@ -46,7 +45,7 @@ export class LikeService {
         
         return {
             statusCode: 200,
-            message: "blog liked!"
+            message: "blog liked!",
         }              
             
 }

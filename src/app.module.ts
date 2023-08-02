@@ -9,6 +9,7 @@ import { PostsModule } from './posts/posts.module';
 import { functions } from './utils/functions';
 import { CommentModule } from './comment/comment.module';
 import { LikeModule } from './likes/likes.module';
+import { BookmarkModule } from './bookmarks/bookmark.module';
 
 @Module({
   imports: [
@@ -36,7 +37,8 @@ import { LikeModule } from './likes/likes.module';
     AuthModule,
     PostsModule,
     CommentModule,
-    LikeModule
+    LikeModule,
+    BookmarkModule
   ],
   controllers: [],
   providers: [functions],

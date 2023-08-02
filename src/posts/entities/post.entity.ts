@@ -3,6 +3,7 @@ import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, Up
 import { Comment } from "../../comment/entities/comment.entity";
 import {Exclude} from 'class-transformer'
 import { Likes } from "src/likes/entities/Like.entity";
+import { Bookmarks } from "src/bookmarks/entities/bookmark.entity";
 
 
 @Entity("Post")
@@ -29,14 +30,13 @@ export class Post {
     comments: Comment[];
 
 
+    @OneToMany((_type) => Bookmarks, (bookmark) => bookmark.blog , {eager:true})
+    bookmarks: Bookmarks[];
+
     @ManyToOne(_type => User, user => user.blogs, {eager : false})
     @Exclude({toPlainOnly : true})
     author: User
 
-
-    @Column("jsonb", { nullable: true, array: true, default: [] })
-    @OneToMany(() => User, (user) => user.id)
-    bookmarks: User[];
 
 
     @Column({ nullable: false, default: "" })

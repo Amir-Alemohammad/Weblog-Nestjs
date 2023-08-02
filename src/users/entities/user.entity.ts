@@ -1,3 +1,4 @@
+import { Bookmarks } from 'src/bookmarks/entities/bookmark.entity';
 import { Comment } from 'src/comment/entities/comment.entity';
 import { Likes } from 'src/likes/entities/Like.entity';
 import { Post } from 'src/posts/entities/post.entity';
@@ -40,8 +41,7 @@ export class User {
 
     
 
-    // @Column("jsonb", { default: [], array: true })
-    // @OneToMany(() => Post, (post) => post.bookmarks)
-    // blog_bookmarks: Post[]
+    @OneToMany((_type) => Bookmarks, (bookmark) => bookmark.user , {eager: true})
+    blog_bookmarks: Bookmarks[]
 
 }
