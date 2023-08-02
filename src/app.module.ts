@@ -8,6 +8,7 @@ import { MailerModule } from '@nestjs-modules/mailer/dist';
 import { PostsModule } from './posts/posts.module';
 import { functions } from './utils/functions';
 import { CommentModule } from './comment/comment.module';
+import { LikeModule } from './likes/likes.module';
 
 @Module({
   imports: [
@@ -34,7 +35,8 @@ import { CommentModule } from './comment/comment.module';
     UsersModule,
     AuthModule,
     PostsModule,
-    CommentModule
+    CommentModule,
+    LikeModule
   ],
   controllers: [],
   providers: [functions],

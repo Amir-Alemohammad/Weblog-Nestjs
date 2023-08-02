@@ -1,4 +1,5 @@
 import { Comment } from 'src/comment/entities/comment.entity';
+import { Likes } from 'src/likes/entities/Like.entity';
 import { Post } from 'src/posts/entities/post.entity';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm'
 
@@ -34,9 +35,8 @@ export class User {
     blogs: Post[]
 
     
-    // @Column("jsonb",{array:true , default: []})
-    // @OneToMany(() => PostLikes, blog => blog.user)
-    // blog_likes: PostLikes[]
+    @OneToMany((_type) => Likes, blog => blog.user , {eager: true})
+    blog_likes: Likes[]
 
     
 

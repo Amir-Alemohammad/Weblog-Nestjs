@@ -1,8 +1,8 @@
 import { User } from "src/users/entities/user.entity";
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, CreateDateColumn, UpdateDateColumn, OneToMany, } from "typeorm"
-import { PostLikes } from "./postLike.entity"
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, UpdateDateColumn, OneToMany, } from "typeorm"
 import { Comment } from "../../comment/entities/comment.entity";
 import {Exclude} from 'class-transformer'
+import { Likes } from "src/likes/entities/Like.entity";
 
 
 @Entity("Post")
@@ -21,9 +21,8 @@ export class Post {
     description: string;
 
     
-    @Column("jsonb", { array: true, default: [] })
-    @OneToMany(() => PostLikes, postlike => postlike.blog)
-    likes: PostLikes[];
+    @OneToMany((_type) => Likes, like => like.blog , {eager:true})
+    likes: Likes[];
 
 
     @OneToMany((_type) => Comment, (comment) => comment.blog,{ eager:true })
