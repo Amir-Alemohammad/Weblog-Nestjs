@@ -43,7 +43,7 @@ export class AuthService {
 
         if (!user) throw new HttpException("There is no user with this email", HttpStatus.NOT_FOUND);
 
-        if (user.code !== loginDto.code) throw new HttpException("The entered code is not correct", HttpStatus.BAD_REQUEST);
+        if (user.code !== +loginDto.code) throw new HttpException("The entered code is not correct", HttpStatus.BAD_REQUEST);
 
         const token = this.jwtService.sign({
             email: user.email,

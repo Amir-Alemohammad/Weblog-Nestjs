@@ -4,6 +4,8 @@ import { ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
 import { join } from 'path';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { SwaggerConfig } from './config/swagger.config';
+
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -18,6 +20,9 @@ async function bootstrap() {
     whitelist: true, //  For additional and duplicate fields
     
   }));
+
+  //Swagger
+  SwaggerConfig(app)
   
   await app.listen(process.env.PORT);
 }
