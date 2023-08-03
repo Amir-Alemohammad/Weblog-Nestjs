@@ -12,7 +12,7 @@ export class User {
     id: number;
 
 
-    @Column({ nullable: true, default: "Bearer Token" })
+    @Column({ nullable: true, default: "Bearer Token" , select:false})
     accessToken: string;
 
 

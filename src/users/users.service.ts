@@ -1,8 +1,9 @@
-import {Injectable } from '@nestjs/common';
+import {HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm"
+
 
 @Injectable()
 export class UsersService {
@@ -50,4 +51,21 @@ export class UsersService {
     return user
   }
 
+  async getProfile(request){
+    const userId = request.user.id;
+    const user = await this.userRepository.findOne({
+      where:{
+        id: userId
+      },
+      select:["email","id"]
+    });
+    
+    if(!user) throw new HttpException("User Not Found",HttpStatus.NOT_FOUND)
+    
+    return {
+      statusCode: 200,
+      user,
+    }
+    
+  }
 }
