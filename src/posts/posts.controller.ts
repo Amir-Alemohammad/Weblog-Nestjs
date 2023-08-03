@@ -4,14 +4,17 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { jwtAuthGuard } from 'src/guard/jwt-auth.guard';
 import uploadFile from "../utils/multer"
+import { ApiTags , ApiConsumes } from '@nestjs/swagger';
 
 
+@ApiTags("Blog")
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Post("/create")
   @UseGuards(jwtAuthGuard)
+  @ApiConsumes("multipart/form-data")
   @UseInterceptors(uploadFile)
   create(@Body() createPostDto: CreatePostDto , @Request() request) {
     return this.postsService.create(createPostDto , request);
@@ -36,6 +39,7 @@ export class PostsController {
 
   @Patch(':id')
   @UseGuards(jwtAuthGuard)
+  @ApiConsumes("multipart/form-data")
   @UseInterceptors(uploadFile)
   update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto, @Request() request) {
     return this.postsService.update(+id, updatePostDto , request);

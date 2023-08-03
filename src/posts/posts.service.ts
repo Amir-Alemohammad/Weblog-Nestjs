@@ -5,6 +5,10 @@ import { Repository } from 'typeorm'
 import { Post } from './entities/post.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { functions } from 'src/utils/functions';
+import { Likes } from 'src/likes/entities/Like.entity';
+import { Comment } from 'src/comment/entities/comment.entity';
+import { Bookmarks } from 'src/bookmarks/entities/bookmark.entity';
+
 
 
 @Injectable()
@@ -12,8 +16,15 @@ export class PostsService {
   constructor(
     @InjectRepository(Post)
     private postRepository: Repository<Post>,
+    @InjectRepository(Likes)
+    private likeRepositroy : Repository<Likes>,
+    @InjectRepository(Comment)
+    private commentRepositroy : Repository<Comment>,
+    @InjectRepository(Bookmarks)
+    private bookmarkRepositroy : Repository<Bookmarks>,
     private functions: functions,
-  ) { }
+    
+  ) {}
 
   async create(createPostDto: CreatePostDto, request: any) {
 
@@ -26,7 +37,6 @@ export class PostsService {
     post.slug = slug;
 
     post.author = request.user.id;
-
 
     post.image = request.body.image;
 
@@ -84,11 +94,11 @@ export class PostsService {
 
 
   async findBySlug(slug: string) {
+    console.log(slug)
     const post = await this.postRepository.findOne({
-      where: {
-        slug,
-      },
-      select: ['title', "author", "comments", "image", "likes", "description"]
+      where:{
+        slug
+      }
     });
     if (!post) throw new HttpException("Post Not Found", HttpStatus.NOT_FOUND)
     return {
@@ -106,6 +116,8 @@ export class PostsService {
       },
 
     });
+
+    post.author = request.user.id;
 
     if (!post) throw new HttpException("Post Not Found", HttpStatus.NOT_FOUND);
 
@@ -135,7 +147,31 @@ export class PostsService {
         author,
       }
     });
+    const likePost = await this.likeRepositroy.findOne({
+      where:{
+        blogId:id,
+      }
+    });
+    const commentPost = await this.commentRepositroy.findOne({
+      where:{
+        blog:{
+          id
+        }
+      }
+    });
+    const bookmarkPost = await this.bookmarkRepositroy.findOne({
+      where:{
+        blogId:id
+      }
+    });
+    if(likePost !== null) this.likeRepositroy.remove(likePost)
+    
+    if(commentPost !== null) this.commentRepositroy.remove(commentPost)
+    
+    if(bookmarkPost !== null) this.bookmarkRepositroy.remove(bookmarkPost)
+
     if (!post) throw new HttpException("Post Not Found", HttpStatus.NOT_FOUND)
+    
     this.functions.deleteFileInPublic(post.image);
     await this.postRepository.remove(post);
     return {
