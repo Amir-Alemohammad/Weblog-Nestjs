@@ -46,5 +46,21 @@ export class BookmarkService {
     }
 
   }
-
+  async getBookmarkedBlog(userId:number){
+    const blog = await this.bookmarkRepository.createQueryBuilder("Bookmarks")
+    .leftJoinAndSelect("Bookmarks.blog","blog")
+    .leftJoin("blog.author","author")
+    .addSelect(['author.id','author.email'])
+    .loadRelationCountAndMap('blog.likes','blog.likes')
+    .loadRelationCountAndMap('blog.bookmarks','blog.bookmarks')
+    .loadRelationCountAndMap('blog.comments','blog.comments')
+    .where({userId})
+    .getManyAndCount()
+  
+    return {
+      blog
+    }
+  
+  }
+  
 }

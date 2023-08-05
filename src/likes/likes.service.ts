@@ -19,10 +19,7 @@ export class LikeService {
         const blog = await this.postService.findById(id)
         
         if(!blog) throw new HttpException("Post Not Found",HttpStatus.NOT_FOUND)
-        
-        
-        
-            
+         
         const findUserInLike = blog.likes.find(item => {
            return item.userId == user.id
         })

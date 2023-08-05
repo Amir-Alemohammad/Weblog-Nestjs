@@ -14,6 +14,14 @@ export class BookmarkController {
   addLike(@Param('id') id:number , @Request() request){
     return this.bookmarkService.addBookmark(id,request)
   }
+
+  @Get("bookmark-blog/:id")
+  @UseGuards(jwtAuthGuard)
+  @ApiParam({name:"id",type:"number"})
+  getBookmarkedBlog(@Request() request){
+    const userId = request.user.id;
+    return this.bookmarkService.getBookmarkedBlog(userId)
+  }
  
   
 }

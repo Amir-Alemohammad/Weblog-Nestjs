@@ -4,6 +4,8 @@ import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { getOtpDto } from './dto/getOtp.dto';
 import { functions } from 'src/utils/functions';
+import { randomInt } from 'crypto';
+
 
 @Injectable()
 export class AuthService {
@@ -12,12 +14,13 @@ export class AuthService {
         private readonly jwtService: JwtService,
         private readonly functions: functions,
     ) { }
-
-
     async getOtp(getOtpDto: getOtpDto) {
 
-        const code = Math.floor(Math.random() * 90000 + 10000);
+        const code = randomInt(90000 + 10000);
 
+        console.log(code)
+
+        
         const user = await this.userService.findUserByEmail(getOtpDto.email);
 
         if (!user) {
@@ -37,10 +40,10 @@ export class AuthService {
             message: "The validation code has been sent to your email",
         }
     }
-
     async login(loginDto: LoginDto, response) {
         const user = await this.userService.findUserByEmail(loginDto.email);
 
+        
         if (!user) throw new HttpException("There is no user with this email", HttpStatus.NOT_FOUND);
 
         if (user.code !== +loginDto.code) throw new HttpException("The entered code is not correct", HttpStatus.BAD_REQUEST);
@@ -62,11 +65,10 @@ export class AuthService {
             accessToken: token,
         }
     }
-
     async logout(response) {
         response.clearCookie("access_token");
         return {
-            satatusCode: HttpStatus.OK,
+            statusCode: HttpStatus.OK,
             message: "You have successfully logged out"
         }
     }
