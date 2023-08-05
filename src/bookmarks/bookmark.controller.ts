@@ -11,7 +11,7 @@ export class BookmarkController {
   @Get("add/:id")
   @UseGuards(jwtAuthGuard)
   @ApiParam({name:"id",type:"number"})
-  addLike(@Param('id') id:number , @Request() request){
+  toggleBookmark(@Param('id') id:number , @Request() request){
     return this.bookmarkService.toggleBookmark(id,request)
   }
 

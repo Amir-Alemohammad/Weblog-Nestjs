@@ -10,8 +10,8 @@ export class LikeController {
 
   @Get("add/:id")
   @UseGuards(jwtAuthGuard)
-  addLike(@Param('id') id:number , @Request() request){
-    return this.likeService.addLike(id,request)
+  toggleLike(@Param('id') id:number , @Request() request){
+    return this.likeService.toggleLike(id,request)
   }
  
   

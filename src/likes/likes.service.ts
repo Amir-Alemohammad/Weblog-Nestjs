@@ -13,18 +13,23 @@ export class LikeService {
     
   ) {}
     
-  async addLike(id:number , request) {
+  async toggleLike(id:number , request) {
         const user = request.user;
         
         const blog = await this.postService.findById(id)
         
         if(!blog) throw new HttpException("Post Not Found",HttpStatus.NOT_FOUND)
          
-        const findUserInLike = blog.likes.find(item => {
+        const findUserInLike = blog?.likes?.find(item => {
            return item.userId == user.id
         })
            
-        if(findUserInLike !== undefined) throw new HttpException("you have liked this blog for 1 time",HttpStatus.BAD_REQUEST)
+        if(findUserInLike){
+            const deleteResult = await this.likeRepository.remove(findUserInLike);
+            return {
+                message:"the blog Disliked"
+            }
+        }
         
         const addLike = this.likeRepository.create({
             blog,
