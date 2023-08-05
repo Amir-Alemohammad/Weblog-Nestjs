@@ -13,7 +13,7 @@ export class BookmarkService {
     
   ) {}
     
-  async addBookmark(id:number,request){
+  async toggleBookmark(id:number,request){
     const user = request.user;
 
     const blog = await this.postService.findById(id)
@@ -21,11 +21,15 @@ export class BookmarkService {
     if(!blog) throw new HttpException("Post Not Found" , HttpStatus.NOT_FOUND);
 
 
-    const findUserInBookmark = blog.bookmarks.find(item => {
+    const findUserInBookmark = blog?.bookmarks?.find(item => {
       return item.userId == user.id
    })
-      
-   if(findUserInBookmark !== undefined) throw new HttpException("you have Bookmarked this blog for 1 time",HttpStatus.BAD_REQUEST)
+   if(findUserInBookmark){
+    const deleteResult = await this.bookmarkRepository.remove(findUserInBookmark);
+    return {
+      message:"the blog has been Unbookmark"
+    }
+   }
 
     const createBookmark = this.bookmarkRepository.create({
       blog,
@@ -34,11 +38,7 @@ export class BookmarkService {
       userId: user.id,
     });
 
-    const result = await this.bookmarkRepository.save(createBookmark).then(bookmark => {
-      return bookmark
-    }).catch(err => {
-      throw new HttpException("Internal Server Error",HttpStatus.INTERNAL_SERVER_ERROR)
-    });
+    const result = await this.bookmarkRepository.save(createBookmark)
 
     return {
       statusCode: 200,

@@ -12,7 +12,7 @@ export class BookmarkController {
   @UseGuards(jwtAuthGuard)
   @ApiParam({name:"id",type:"number"})
   addLike(@Param('id') id:number , @Request() request){
-    return this.bookmarkService.addBookmark(id,request)
+    return this.bookmarkService.toggleBookmark(id,request)
   }
 
   @Get("bookmark-blog/:id")
