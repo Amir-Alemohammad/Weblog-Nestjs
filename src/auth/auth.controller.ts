@@ -1,4 +1,4 @@
-import { Controller, Post , Body , Request, UseGuards, Res } from '@nestjs/common';
+import { Controller, Post , Body , Request, UseGuards, Res, HttpStatus } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { getOtpDto } from './dto/getOtp.dto'
@@ -39,6 +39,10 @@ export class AuthController {
   @Post('logout')
   @UseGuards(jwtAuthGuard)
   logout(@Res({passthrough: true}) response){
-    return this.authService.logout(response);
+    response.clearCookie("access_token");
+        return {
+            statusCode: HttpStatus.OK,
+            message: "You have successfully logged out"
+        }
   }
 }

@@ -65,13 +65,4 @@ export class AuthService {
             accessToken: token,
         }
     }
-    async logout(response) {
-        response.clearCookie("access_token");
-        return {
-            statusCode: HttpStatus.OK,
-            message: "You have successfully logged out"
-        }
-    }
-
-
 }
