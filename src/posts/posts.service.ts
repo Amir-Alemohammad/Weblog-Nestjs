@@ -8,7 +8,7 @@ import { functions } from 'src/utils/functions';
 import { Likes } from 'src/likes/entities/Like.entity';
 import { Comment } from 'src/comment/entities/comment.entity';
 import { Bookmarks } from 'src/bookmarks/entities/bookmark.entity';
-
+import slugify from 'slugify';
 
 
 @Injectable()
@@ -32,9 +32,12 @@ export class PostsService {
 
     const post = this.postRepository.create(createPostDto)
 
-    const slug = post.title.replace(/ /g, "-");
 
-    post.slug = slug;
+    //create slug for blog
+    post.slug = slugify(post.title,{
+      remove: /[*+~.()'"!:@]/g
+    });
+    console.log(post.slug)
 
     post.author = request.user.id;
 
