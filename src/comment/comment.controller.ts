@@ -3,6 +3,8 @@ import { jwtAuthGuard } from "src/guard/jwt-auth.guard";
 import { CommentService } from "./comment.service";
 import { CreateCommentDto } from "./dto/create-comment.dto";
 import { ApiTags , ApiConsumes , ApiParam , ApiBody } from "@nestjs/swagger";
+import { UserCheckRole } from "src/utils/decorators/confirm-comment.decorator";
+import { User } from "src/users/entities/user.entity";
 
 @ApiTags("Comments")
 @Controller('comment')
@@ -24,7 +26,7 @@ export class CommentController {
 
   @Get("/confirm-comment/:id")
   @UseGuards(jwtAuthGuard)
-  confirmComment(@Param("id") id:number, @Request() request){
+  confirmComment(@Param("id") id:number, @Request() request , @UserCheckRole() user:User){
     return this.commentService.confirmComment(id,request)
   }
 }
