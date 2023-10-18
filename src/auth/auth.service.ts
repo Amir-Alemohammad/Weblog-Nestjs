@@ -62,7 +62,7 @@ export class AuthService {
 
         return {
             statusCode: HttpStatus.OK,
-            accessToken: token,
+            message: "Login was successful!"
         }
     }
 }

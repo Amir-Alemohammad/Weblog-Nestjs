@@ -17,14 +17,14 @@ export class PostsService {
     @InjectRepository(Post)
     private postRepository: Repository<Post>,
     @InjectRepository(Likes)
-    private likeRepositroy : Repository<Likes>,
+    private likeRepositroy: Repository<Likes>,
     @InjectRepository(Comment)
-    private commentRepositroy : Repository<Comment>,
+    private commentRepositroy: Repository<Comment>,
     @InjectRepository(Bookmarks)
-    private bookmarkRepositroy : Repository<Bookmarks>,
+    private bookmarkRepositroy: Repository<Bookmarks>,
     private functions: functions,
-    
-  ) {}
+
+  ) { }
 
   async create(createPostDto: CreatePostDto, request: any) {
 
@@ -34,7 +34,7 @@ export class PostsService {
 
 
     //create slug for blog
-    post.slug = slugify(post.title,{
+    post.slug = slugify(post.title, {
       remove: /[*+~.()'"!:@]/g
     });
     console.log(post.slug)
@@ -85,9 +85,9 @@ export class PostsService {
     }
   }
 
-  async findById(id:number){
+  async findById(id: number) {
     const post = await this.postRepository.findOne({
-      where:{
+      where: {
         id
       }
     });
@@ -99,7 +99,7 @@ export class PostsService {
   async findBySlug(slug: string) {
     console.log(slug)
     const post = await this.postRepository.findOne({
-      where:{
+      where: {
         slug
       }
     });
@@ -115,27 +115,16 @@ export class PostsService {
     const post = await this.postRepository.findOne({
       where: {
         id,
-        author
       },
-
     });
-
-    post.author = request.user.id;
-
     if (!post) throw new HttpException("Post Not Found", HttpStatus.NOT_FOUND);
-
-
+    post.author = author;
     let slug = updatePostDto.title
     slug = slug.replace(/ /g, "-");
-
-
-
     let image = request.body.image;
-    image = post.image.replace(/\\/g, "/")
-
+    image = image.replace(/\\/g, "/")
+    console.log(image)
     const updateResult = await this.postRepository.update(id, { ...updatePostDto, image, slug })
-
-
     return {
       statusCode: HttpStatus.OK,
       message: "Your post has been successfully edited"
@@ -151,30 +140,30 @@ export class PostsService {
       }
     });
     const likePost = await this.likeRepositroy.findOne({
-      where:{
-        blogId:id,
+      where: {
+        blogId: id,
       }
     });
     const commentPost = await this.commentRepositroy.findOne({
-      where:{
-        blog:{
+      where: {
+        blog: {
           id
         }
       }
     });
     const bookmarkPost = await this.bookmarkRepositroy.findOne({
-      where:{
-        blogId:id
+      where: {
+        blogId: id
       }
     });
-    if(likePost !== null) this.likeRepositroy.remove(likePost)
-    
-    if(commentPost !== null) this.commentRepositroy.remove(commentPost)
-    
-    if(bookmarkPost !== null) this.bookmarkRepositroy.remove(bookmarkPost)
+    if (likePost !== null) this.likeRepositroy.remove(likePost)
+
+    if (commentPost !== null) this.commentRepositroy.remove(commentPost)
+
+    if (bookmarkPost !== null) this.bookmarkRepositroy.remove(bookmarkPost)
 
     if (!post) throw new HttpException("Post Not Found", HttpStatus.NOT_FOUND)
-    
+
     this.functions.deleteFileInPublic(post.image);
     await this.postRepository.remove(post);
     return {
