@@ -8,12 +8,11 @@ import { Likes } from 'src/likes/entities/Like.entity';
 import { Bookmarks } from 'src/bookmarks/entities/bookmark.entity';
 import { Comment } from 'src/comment/entities/comment.entity';
 
-
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Likes , Post, Comment , Bookmarks]),
+    TypeOrmModule.forFeature([Likes, Post, Comment, Bookmarks]),
   ],
   controllers: [PostsController],
-  providers: [PostsService , functions],
+  providers: [PostsService, functions],
 })
-export class PostsModule {}
+export class PostsModule { }

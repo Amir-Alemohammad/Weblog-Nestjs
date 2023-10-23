@@ -1,8 +1,8 @@
-import { Module , MiddlewareConsumer , NestModule } from '@nestjs/common';
+import { Module, MiddlewareConsumer, NestModule } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { LoggerMiddleware } from './logger/logger.middleware';
 import { ConfigModule } from '@nestjs/config';
-import {TypeOrmModule} from '@nestjs/typeorm'
+import { TypeOrmModule } from '@nestjs/typeorm'
 import { AuthModule } from './auth/auth.module';
 import { MailerModule } from '@nestjs-modules/mailer/dist';
 import { PostsModule } from './posts/posts.module';
@@ -25,9 +25,9 @@ import { BookmarkModule } from './bookmarks/bookmark.module';
       synchronize: true, // for production mode this property is false
     }),
     MailerModule.forRoot({
-      transport:{
+      transport: {
         service: "gmail",
-        auth:{
+        auth: {
           user: "amirho3inalemohammad@gmail.com",
           pass: process.env.EMAIL_PASS
         }
@@ -42,10 +42,9 @@ import { BookmarkModule } from './bookmarks/bookmark.module';
   ],
   controllers: [],
   providers: [functions],
-
 })
 export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer){
+  configure(consumer: MiddlewareConsumer) {
     consumer.apply(LoggerMiddleware).forRoutes('*')
   }
 }

@@ -1,23 +1,22 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, UseInterceptors , UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { jwtAuthGuard } from 'src/guard/jwt-auth.guard';
 import uploadFile from "../utils/multer"
-import { ApiTags , ApiConsumes } from '@nestjs/swagger';
-
+import { ApiTags, ApiConsumes } from '@nestjs/swagger';
 
 @ApiTags("Blog")
 @Controller('posts')
 export class PostsController {
-  constructor(private readonly postsService: PostsService) {}
+  constructor(private readonly postsService: PostsService) { }
 
   @Post("/create")
   @UseGuards(jwtAuthGuard)
   @ApiConsumes("multipart/form-data")
   @UseInterceptors(uploadFile)
-  create(@Body() createPostDto: CreatePostDto , @Request() request) {
-    return this.postsService.create(createPostDto , request);
+  create(@Body() createPostDto: CreatePostDto, @Request() request) {
+    return this.postsService.create(createPostDto, request);
   }
 
   @Get()
@@ -28,8 +27,8 @@ export class PostsController {
 
   @Get(':id')
   @UseGuards(jwtAuthGuard)
-  findOne(@Param('id') id: string , @Request() request) {
-    return this.postsService.findOne(+id,request);
+  findOne(@Param('id') id: string, @Request() request) {
+    return this.postsService.findOne(+id, request);
   }
   @Get('slugs/:slug')
   @UseGuards(jwtAuthGuard)
@@ -42,14 +41,12 @@ export class PostsController {
   @ApiConsumes("multipart/form-data")
   @UseInterceptors(uploadFile)
   update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto, @Request() request) {
-    return this.postsService.update(+id, updatePostDto , request);
+    return this.postsService.update(+id, updatePostDto, request);
   }
 
   @Delete(':id')
   @UseGuards(jwtAuthGuard)
-  remove(@Param('id') id: string , @Request() request) {
-    return this.postsService.remove(+id,request);
+  remove(@Param('id') id: string, @Request() request) {
+    return this.postsService.remove(+id, request);
   }
-
-
 }

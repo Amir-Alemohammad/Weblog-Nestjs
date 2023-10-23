@@ -11,37 +11,27 @@ export class User {
     @PrimaryGeneratedColumn()
     id: number;
 
-
-    @Column({ nullable: true, default: "Bearer Token" , select:false})
+    @Column({ nullable: true, default: "Bearer Token", select: false })
     accessToken: string;
-
 
     @Column({ unique: true, nullable: false })
     email: string;
 
-
-    @Column({ default: 0 , nullable:true})
+    @Column({ default: 0, nullable: true })
     code: number;
 
-
-    @Column({ default: "USER" , nullable:true})
+    @Column({ default: "USER", nullable: true })
     Role: string
 
-
-    @OneToMany((_type) => Comment, (comment) => comment.user , { eager: true })
+    @OneToMany((_type) => Comment, (comment) => comment.user, { eager: true })
     blog_comments: Comment[]
 
-    
     @OneToMany((_type) => Post, blog => blog.author, { eager: true })
     blogs: Post[]
 
-    
-    @OneToMany((_type) => Likes, blog => blog.user , {eager: true})
+    @OneToMany((_type) => Likes, blog => blog.user, { eager: true })
     blog_likes: Likes[]
 
-    
-
-    @OneToMany((_type) => Bookmarks, (bookmark) => bookmark.user , {eager: true})
+    @OneToMany((_type) => Bookmarks, (bookmark) => bookmark.user, { eager: true })
     blog_bookmarks: Bookmarks[]
-
 }

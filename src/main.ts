@@ -6,24 +6,16 @@ import { join } from 'path';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { SwaggerConfig } from './config/swagger.config';
 
-
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  
   //static folders
   app.useStaticAssets(join(process.cwd(), "public"))
-
   app.use(cookieParser()); // cookie parser middleware
-  
   app.useGlobalPipes(new ValidationPipe({ // validation
-
     whitelist: true, //  For additional and duplicate fields
-    
   }));
-
   //Swagger
   SwaggerConfig(app)
-  
   await app.listen(process.env.PORT);
 }
 bootstrap();

@@ -9,15 +9,15 @@ export class Comment {
     @PrimaryGeneratedColumn()
     id: number
 
-    @ManyToOne((_type) => User, (user) => user.blog_comments , { eager:false })
-    @Exclude({toPlainOnly:true})
+    @ManyToOne((_type) => User, (user) => user.blog_comments, { eager: false })
+    @Exclude({ toPlainOnly: true })
     user: User
 
-    @Column({nullable: false})
+    @Column({ nullable: false })
     text: string;
 
-    @ManyToOne((_type) => Post , (blog) => blog.comments , {eager: false})
-    @Exclude({toPlainOnly:true})
+    @ManyToOne((_type) => Post, (blog) => blog.comments, { eager: false })
+    @Exclude({ toPlainOnly: true })
     blog: Post
 
     @Column({ nullable: false, default: false })
@@ -28,5 +28,4 @@ export class Comment {
 
     @CreateDateColumn({ type: "timestamp" })
     createdAt: Date
-
 }

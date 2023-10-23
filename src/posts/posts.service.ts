@@ -25,37 +25,23 @@ export class PostsService {
     private functions: functions,
 
   ) { }
-
   async create(createPostDto: CreatePostDto, request: any) {
-
     if (!request.body.image) throw new HttpException("Image is Required", HttpStatus.BAD_REQUEST)
-
     const post = this.postRepository.create(createPostDto)
-
-
     //create slug for blog
     post.slug = slugify(post.title, {
       remove: /[*+~.()'"!:@]/g
     });
     console.log(post.slug)
-
     post.author = request.user.id;
-
     post.image = request.body.image;
-
     post.image = post.image.replace(/\\/g, "/")
-
-
     const postcreate = await this.postRepository.save(post)
-
-
-
     return {
       statusCode: HttpStatus.CREATED,
       message: "post created!"
     }
   }
-
   async findAll(request: any) {
     const author = request.user.id;
     const posts = await this.postRepository.find({
@@ -69,7 +55,6 @@ export class PostsService {
       posts,
     }
   }
-
   async findOne(id: number, request: any) {
     const author = request.user.id;
     const post = await this.postRepository.findOne({
@@ -84,7 +69,6 @@ export class PostsService {
       post,
     }
   }
-
   async findById(id: number) {
     const post = await this.postRepository.findOne({
       where: {
@@ -94,8 +78,6 @@ export class PostsService {
     if (!post) throw new HttpException("There is no Post", HttpStatus.NOT_FOUND)
     return post;
   }
-
-
   async findBySlug(slug: string) {
     console.log(slug)
     const post = await this.postRepository.findOne({
@@ -109,7 +91,6 @@ export class PostsService {
       post
     }
   }
-
   async update(id: number, updatePostDto: UpdatePostDto, request) {
     const author = request.user.id;
     const post = await this.postRepository.findOne({
@@ -130,7 +111,6 @@ export class PostsService {
       message: "Your post has been successfully edited"
     }
   }
-
   async remove(id: number, request) {
     const author = request.user.id;
     const post = await this.postRepository.findOne({
@@ -157,13 +137,9 @@ export class PostsService {
       }
     });
     if (likePost !== null) this.likeRepositroy.remove(likePost)
-
     if (commentPost !== null) this.commentRepositroy.remove(commentPost)
-
     if (bookmarkPost !== null) this.bookmarkRepositroy.remove(bookmarkPost)
-
     if (!post) throw new HttpException("Post Not Found", HttpStatus.NOT_FOUND)
-
     this.functions.deleteFileInPublic(post.image);
     await this.postRepository.remove(post);
     return {

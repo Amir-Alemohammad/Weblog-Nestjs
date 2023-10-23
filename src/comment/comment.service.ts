@@ -12,55 +12,40 @@ export class CommentService {
     @InjectRepository(Comment)
     private commentRepository: Repository<Comment>,
     private readonly postService: PostsService
-  ) {}
-
-
-  async createComment(id:number,createCommentDto: CreateCommentDto , request){
-      
+  ) { }
+  async createComment(id: number, createCommentDto: CreateCommentDto, request) {
     const user = request.user;
-
     const blog = await this.postService.findById(id);
-
-
     const comment = this.commentRepository.create({
       blog,
-      text : createCommentDto.text,
+      text: createCommentDto.text,
       user,
     });
-    const result = await this.commentRepository.save(comment).then(comment=>{
-      
+    const result = await this.commentRepository.save(comment).then(comment => {
       return comment
-
     }).catch(err => {
       console.log(err)
-      throw new HttpException("Internal Server Error",HttpStatus.INTERNAL_SERVER_ERROR)
+      throw new HttpException("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR)
     });
     return {
       statusCode: HttpStatus.OK,
       message: "Comment Created!"
     }
-
   }
-
-  async confirmComment(id:number,request){
-    
+  async confirmComment(id: number, request) {
     const comment = await this.commentRepository.findOne({
-      where:{
+      where: {
         id,
       }
     });
-    if(!comment) throw new HttpException("Comment Not Found",HttpStatus.NOT_FOUND)
-
-    if(comment.openToComment && comment.show) throw new HttpException("Comment has open for blog",HttpStatus.BAD_REQUEST)
-
+    if (!comment) throw new HttpException("Comment Not Found", HttpStatus.NOT_FOUND)
+    if (comment.openToComment && comment.show) throw new HttpException("Comment has open for blog", HttpStatus.BAD_REQUEST)
     comment.openToComment = true;
-
     comment.show = true;
-
-    const result = await this.commentRepository.save(comment).then(comment =>{
+    const result = await this.commentRepository.save(comment).then(comment => {
       return comment
-    }).catch(err =>{
-      throw new HttpException("Internal Server Error",HttpStatus.INTERNAL_SERVER_ERROR)
+    }).catch(err => {
+      throw new HttpException("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR)
     });
     return {
       statusCode: HttpStatus.OK,
